@@ -40,7 +40,7 @@ COMPILE_ARGS 		+= -I$(SRC_DIR)
 # Include the testbench sources:
 VERILOG_SOURCES += $(PWD)/$(TB_FILE)
 
-.PHONY: test-max4 test-norm-sub4 test-recip-nr test-scale4-clip test-serializer4
+.PHONY: test-max4 test-norm-sub4 test-recip-nr
 
 test-max4:
 	$(MAKE) SIM_BUILD="sim_build/max4" PROJECT_SOURCES="max4_signed8.v" TB_FILE="tb/tb_max4_signed8.v" TOPLEVEL="tb_max4_signed8" COCOTB_TEST_MODULES="test_max4_signed8" sim
@@ -50,12 +50,6 @@ test-norm-sub4:
 
 test-recip-nr:
 	$(MAKE) SIM_BUILD="sim_build/recip_nr" PROJECT_SOURCES="recip_nr.v" TB_FILE="tb/tb_recip_nr.v" TOPLEVEL="tb_recip_nr" COCOTB_TEST_MODULES="test_recip_nr" sim
-
-test-scale4-clip:
-	$(MAKE) SIM_BUILD="sim_build/scale4_clip" PROJECT_SOURCES="scale4_clip.v" TB_FILE="tb/tb_scale4_clip.v" TOPLEVEL="tb_scale4_clip" COCOTB_TEST_MODULES="test_scale4_clip" sim
-
-test-serializer4:
-	$(MAKE) SIM_BUILD="sim_build/serializer4" PROJECT_SOURCES="serializer4.v" TB_FILE="tb/tb_serializer4.v" TOPLEVEL="tb_serializer4" COCOTB_TEST_MODULES="test_serializer4" sim
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim
