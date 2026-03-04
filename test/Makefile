@@ -6,7 +6,7 @@ SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES ?= project.v max4_signed8.v nom_sub4.v exp_pwl_lane.v sum4_tree.v recip_nr.v scale4_clip.v serializer4.v
+PROJECT_SOURCES ?= project.v max4_signed8.v norm_sub4.v exp_pwl_lane.v sum4_tree.v recip_nr.v scale4_clip.v serializer4.v
 TB_FILE ?= tb.v
 TOPLEVEL ?= tb
 COCOTB_TEST_MODULES ?= test
@@ -48,7 +48,7 @@ test-max4:
 	$(MAKE) SIM_BUILD="sim_build/max4" PROJECT_SOURCES="max4_signed8.v" TB_FILE="tb/tb_max4_signed8.v" TOPLEVEL="tb_max4_signed8" COCOTB_TEST_MODULES="test_max4_signed8" sim
 
 test-norm-sub4:
-	$(MAKE) SIM_BUILD="sim_build/norm_sub4" PROJECT_SOURCES="nom_sub4.v" TB_FILE="tb/tb_norm_sub4.v" TOPLEVEL="tb_norm_sub4" COCOTB_TEST_MODULES="test_norm_sub4" sim
+	$(MAKE) SIM_BUILD="sim_build/norm_sub4" PROJECT_SOURCES="norm_sub4.v" TB_FILE="tb/tb_norm_sub4.v" TOPLEVEL="tb_norm_sub4" COCOTB_TEST_MODULES="test_norm_sub4" sim
 
 test-recip-nr:
 	$(MAKE) SIM_BUILD="sim_build/recip_nr" PROJECT_SOURCES="recip_nr.v" TB_FILE="tb/tb_recip_nr.v" TOPLEVEL="tb_recip_nr" COCOTB_TEST_MODULES="test_recip_nr" sim

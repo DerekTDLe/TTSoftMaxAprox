@@ -1,47 +1,44 @@
-# Sample testbench for a Tiny Tapeout project
+# Testbench Guide
 
-This is a sample testbench for a Tiny Tapeout project. It uses [cocotb](https://docs.cocotb.org/en/stable/) to drive the DUT and check the outputs.
-See below to get started or for more information, check the [website](https://tinytapeout.com/hdl/testing/).
+This project uses a cocotb-based, self-checking verification flow.
 
-## Setting up
+## Default integration test
 
-1. Edit [Makefile](Makefile) and modify `PROJECT_SOURCES` to point to your Verilog files.
-2. Edit [tb.v](tb.v) and replace `tt_um_example` with your module name.
-
-## How to run
-
-To run the RTL simulation:
+Run from this directory:
 
 ```sh
 make -B
 ```
 
-To run gatelevel simulation, first harden your project and copy `../runs/wokwi/results/final/verilog/gl/{your_module_name}.v` to `gate_level_netlist.v`.
+This compiles the full top-level (`tt_um_nonlut_softmax`) and runs `test.py`, which verifies:
 
-Then run:
+- transaction start/load/serialize flow,
+- exactly 4 output bytes per transaction,
+- done/valid signaling,
+- output range checks,
+- approximate softmax correctness versus a floating-point reference.
+
+Artifacts:
+
+- `results.xml` (pass/fail summary used by CI),
+- `tb.fst` (waveform).
+
+## Module-level tests
+
+You can test blocks independently:
 
 ```sh
-make -B GATES=yes
+make -B test-max4
+make -B test-norm-sub4
+make -B test-exp-pwl-lane
+make -B test-exp-pwl4
+make -B test-sum4-tree
+make -B test-recip-nr
+make -B test-scale4-clip
 ```
 
-If you wish to save the waveform in VCD format instead of FST format, edit tb.v to use `$dumpfile("tb.vcd");` and then run:
-
-```sh
-make -B FST=
-```
-
-This will generate `tb.vcd` instead of `tb.fst`.
-
-## How to view the waveform file
-
-Using GTKWave
+## Waveform viewing
 
 ```sh
 gtkwave tb.fst tb.gtkw
-```
-
-Using Surfer
-
-```sh
-surfer tb.fst
 ```

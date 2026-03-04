@@ -1,42 +1,61 @@
-![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
+# nonLUT_softmax (Tiny Tapeout)
 
-# Tiny Tapeout Verilog Project Template
+4-input LUT-less softmax accelerator implemented in Verilog for the Tiny Tapeout Sky130 template.
 
-- [Read the documentation for project](docs/info.md)
+## Design summary
 
-## What is Tiny Tapeout?
+This design accepts 4 signed 8-bit inputs over `ui_in` (serially), computes an approximate softmax, and returns 4 serialized 8-bit outputs on `uo_out`.
 
-Tiny Tapeout is an educational project that aims to make it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip.
+Pipeline stages:
 
-To learn more and get started, visit https://tinytapeout.com.
+1. `max4_signed8`: signed max of the 4 inputs.
+2. `norm_sub4` (`norm_sub4.v`): subtract max from each lane.
+3. `exp_pwl_lane` x4: piecewise-linear approximation of `exp(x)` for normalized lanes.
+4. `sum4_tree`: sum the 4 exponential lanes.
+5. `recip_nr`: reciprocal approximation for normalization scale.
+6. `scale4_clip`: lane scaling in Q0.8 domain with 8-bit saturation.
+7. `serializer4`: output bytes one-per-cycle.
 
-## Set up your Verilog project
+Top module: `tt_um_nonlut_softmax`
 
-1. Add your Verilog files to the `src` folder.
-2. Edit the [info.yaml](info.yaml) and update information about your project, paying special attention to the `source_files` and `top_module` properties. If you are upgrading an existing Tiny Tapeout project, check out our [online info.yaml migration tool](https://tinytapeout.github.io/tt-yaml-upgrade-tool/).
-3. Edit [docs/info.md](docs/info.md) and add a description of your project.
-4. Adapt the testbench to your design. See [test/README.md](test/README.md) for more information.
+## Interface behavior
 
-The GitHub action will automatically build the ASIC files using [LibreLane](https://www.zerotoasiccourse.com/terminology/librelane/).
+- `ui_in[7] = 1` in IDLE starts a transaction.
+- Next 4 clock cycles: present 4 signed input bytes on `ui_in`.
+- `uio_out[1]` indicates serializer valid while each output byte is present on `uo_out`.
+- `uio_out[0]` indicates done for the transaction.
 
-## Enable GitHub actions to build the results page
+## Files
 
-- [Enabling GitHub Pages](https://tinytapeout.com/faq/#my-github-action-is-failing-on-the-pages-part)
+- RTL: [src](src)
+- Tiny Tapeout project metadata: [info.yaml](info.yaml)
+- Datasheet markdown source: [docs/info.md](docs/info.md)
+- Testbench and cocotb tests: [test](test)
 
-## Resources
+## Testing
 
-- [FAQ](https://tinytapeout.com/faq/)
-- [Digital design lessons](https://tinytapeout.com/digital_design/)
-- [Learn how semiconductors work](https://tinytapeout.com/siliwiz/)
-- [Join the community](https://tinytapeout.com/discord)
-- [Build your design locally](https://www.tinytapeout.com/guides/local-hardening/)
+From `test/`:
 
-## What next?
+```sh
+make -B
+```
 
-- [Submit your design to the next shuttle](https://app.tinytapeout.com/).
-- Edit [this README](README.md) and explain your design, how it works, and how to test it.
-- Share your project on your social network of choice:
-  - LinkedIn [#tinytapeout](https://www.linkedin.com/search/results/content/?keywords=%23tinytapeout) [@TinyTapeout](https://www.linkedin.com/company/100708654/)
-  - Mastodon [#tinytapeout](https://chaos.social/tags/tinytapeout) [@matthewvenn](https://chaos.social/@matthewvenn)
-  - X (formerly Twitter) [#tinytapeout](https://twitter.com/hashtag/tinytapeout) [@tinytapeout](https://twitter.com/tinytapeout)
-  - Bluesky [@tinytapeout.com](https://bsky.app/profile/tinytapeout.com)
+This runs the default self-checking cocotb integration test (`test/test.py`) and produces `results.xml` + waveform output.
+
+Selected module tests:
+
+```sh
+make -B test-max4
+make -B test-norm-sub4
+make -B test-exp-pwl-lane
+make -B test-sum4-tree
+make -B test-recip-nr
+make -B test-scale4-clip
+```
+
+## Tiny Tapeout
+
+- Template reference: https://github.com/TinyTapeout/ttsky-verilog-template
+- Program info: https://tinytapeout.com/
+
+For assignment submission, provide the public repository URL and the full commit SHA you want graded.

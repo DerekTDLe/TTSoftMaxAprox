@@ -19,7 +19,7 @@ project:
   source_files:
     - "project.v"
     - "max4_signed8.v"
-    - "nom_sub4.v"
+    - "norm_sub4.v"
     - "exp_pwl_lane.v"
     - "sum4_tree.v"
     - "recip_nr.v"
