@@ -1,0 +1,6 @@
+# ABC configuration file
+# Minimal config to avoid "unknown command 'abc'" errors
+
+set_operating_conditions -lib cells
+
+# Standard ABC optimization flow
