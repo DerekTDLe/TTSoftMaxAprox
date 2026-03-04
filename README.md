@@ -1,4 +1,4 @@
-# nonLUT_softmax (Tiny Tapeout)
+# softmaxAprox(Tiny Tapeout)
 
 4-input LUT-less softmax accelerator implemented in Verilog for the Tiny Tapeout Sky130 template.
 
