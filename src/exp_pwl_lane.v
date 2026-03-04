@@ -5,18 +5,13 @@
 
 `default_nettype none
 
-module exp_pwl_lane( //test to compute a single lane of the exp approximation
+module exp_pwl_lane( //Gate-optimized 5-segment PWL exponential approximation
     input  wire [7:0] x_i, //input signed 8-bit
     output wire [7:0] exp_o //output unsigned 8-bit
 );
-    //case approximations, starting with 6 segments
-    //([-8,-6):; y \approx 0.5x + 4)
-    //([-6,-4):; y \approx 2x + 13)
-    //([-4,-3):; y \approx 8x + 37)
-    //([-3,-2):; y \approx 22x + 79)
-    //([-2,-1):; y \approx 59x + 153)
-    //([-1,0]:; y \approx 161x + 255)
-
+    // Optimized PWL: 5 segments with 8-bit coefficients (no large multipliers)
+    // Approximates e^x without using x*32 or larger multiplies
+    
     wire signed [7:0] x_s = x_i;
     reg signed [15:0] y_s;
     reg [7:0] exp_o_reg;
@@ -24,22 +19,24 @@ module exp_pwl_lane( //test to compute a single lane of the exp approximation
     always @(*) begin
         if (x_s <= -8'sd8) begin
             y_s = 16'sd0;
-        end else if (x_s >= 8'sd0) begin
+        end else if (x_s > 8'sd0) begin
+            // x > 0: approximately constant at 255 (e^x >> 1 for x > 0)
             y_s = 16'sd255;
         end else if (x_s < -8'sd6) begin
-            y_s = (x_s >>> 1) + 16'sd4; //0.5x + 4
+            // [-8, -6): e^x ≈ x + 8 (coarse but avoids mult)
+            y_s = x_s + 16'sd8;
         end else if (x_s < -8'sd4) begin
-            y_s = (x_s <<< 1) + 16'sd13; //2x + 13
-        end else if (x_s < -8'sd3) begin
-            y_s = (x_s <<< 3) + 16'sd37; //8x + 37
+            // [-6, -4): e^x ≈ 2*x + 16
+            y_s = (x_s <<< 1) + 16'sd16;
         end else if (x_s < -8'sd2) begin
-            y_s = (x_s * 16'sd22) + 16'sd79; //22x + 79
-        end else if (x_s < -8'sd1) begin
-            y_s = (x_s * 16'sd59) + 16'sd153; //59x + 153
+            // [-4, -2): e^x ≈ 4*x + 32
+            y_s = (x_s <<< 2) + 16'sd32;
         end else begin
-            y_s = (x_s * 16'sd161) + 16'sd255; //161x + 255
+            // [-2, 0]: e^x ≈ 16*x + 128 (includes x=0 → e^0=128≈1)
+            y_s = (x_s <<< 4) + 16'sd128;
         end
 
+        // Saturate to [0, 255]
         if (y_s < 16'sd0)
             exp_o_reg = 8'd0;
         else if (y_s > 16'sd255)
@@ -51,3 +48,7 @@ module exp_pwl_lane( //test to compute a single lane of the exp approximation
     assign exp_o = exp_o_reg;
     
 endmodule
+
+`default_nettype wire
+
+`default_nettype wire

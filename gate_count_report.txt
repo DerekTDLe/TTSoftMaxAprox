@@ -1,0 +1,53 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2020  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.33 (git sha1 2584903a060)
+
+
+-- Running command `read_verilog -sv src/*.v; hierarchy -top tt_um_nonlut_softmax; synth; stat' --
+
+1. Executing Verilog-2005 frontend: src/exp_pwl4.v
+Parsing SystemVerilog input from `src/exp_pwl4.v' to AST representation.
+Generating RTLIL representation for module `\exp_pwl4'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: src/exp_pwl_lane.v
+Parsing SystemVerilog input from `src/exp_pwl_lane.v' to AST representation.
+Generating RTLIL representation for module `\exp_pwl_lane'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: src/max4_signed8.v
+Parsing SystemVerilog input from `src/max4_signed8.v' to AST representation.
+Generating RTLIL representation for module `\max4_signed8'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: src/norm_sub4.v
+Parsing SystemVerilog input from `src/norm_sub4.v' to AST representation.
+Generating RTLIL representation for module `\norm_sub4'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: src/project.v
+Parsing SystemVerilog input from `src/project.v' to AST representation.
+Generating RTLIL representation for module `\tt_um_nonlut_softmax'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: src/recip_nr.v
+src/recip_nr.v:58: ERROR: syntax error, unexpected '['
