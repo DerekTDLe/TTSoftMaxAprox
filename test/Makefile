@@ -40,7 +40,7 @@ COMPILE_ARGS 		+= -I$(SRC_DIR)
 # Include the testbench sources:
 VERILOG_SOURCES += $(PWD)/$(TB_FILE)
 
-.PHONY: test-max4 test-norm-sub4 test-recip-nr
+.PHONY: test-max4 test-norm-sub4 test-recip-nr test-exp-pwl-lane test-exp-pwl4
 
 test-max4:
 	$(MAKE) SIM_BUILD="sim_build/max4" PROJECT_SOURCES="max4_signed8.v" TB_FILE="tb/tb_max4_signed8.v" TOPLEVEL="tb_max4_signed8" COCOTB_TEST_MODULES="test_max4_signed8" sim
@@ -50,6 +50,12 @@ test-norm-sub4:
 
 test-recip-nr:
 	$(MAKE) SIM_BUILD="sim_build/recip_nr" PROJECT_SOURCES="recip_nr.v" TB_FILE="tb/tb_recip_nr.v" TOPLEVEL="tb_recip_nr" COCOTB_TEST_MODULES="test_recip_nr" sim
+
+test-exp-pwl-lane:
+	$(MAKE) SIM_BUILD="sim_build/exp_pwl_lane" PROJECT_SOURCES="exp_pwl_lane.v" TB_FILE="tb/tb_exp_pwl_lane.v" TOPLEVEL="tb_exp_pwl_lane" COCOTB_TEST_MODULES="test_exp_pwl_lane" sim
+
+test-exp-pwl4:
+	$(MAKE) SIM_BUILD="sim_build/exp_pwl4" PROJECT_SOURCES="exp_pwl_lane.v exp_pwl4.v" TB_FILE="tb/tb_exp_pwl4.v" TOPLEVEL="tb_exp_pwl4" COCOTB_TEST_MODULES="test_exp_pwl4" sim
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim
