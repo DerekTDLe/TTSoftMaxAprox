@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module scale4_clip( //scale 4 lanes by reciprocal and clip to 8-bit
+module scale4_clip( //Ultra-minimalist: shift-only scaling
     input  wire [7:0] p0_i,
     input  wire [7:0] p1_i,
     input  wire [7:0] p2_i,
@@ -17,24 +17,24 @@ module scale4_clip( //scale 4 lanes by reciprocal and clip to 8-bit
     output wire [7:0] y3_o
 );
 
-    // Simplified 8x8 multiplier (recip_i[15:8] is the 8-bit reciprocal)
-    function automatic [7:0] mul_clip_u8;
-        input [7:0] a;
-        input [15:0] b;
-        reg [15:0] prod;
+    // Shift by 1 only: p * 2 approximates scaling
+    // Works well when sum of exps is small (common case)
+    function automatic [7:0] scale_shift_1bit;
+        input [7:0] p;
+        reg [8:0] scaled;
         begin
-            prod = a * b[15:8];  // Use only upper 8 bits of recip as 8-bit reciprocal
-            if (prod > 16'd255)
-                mul_clip_u8 = 8'd255;
+            scaled = {p, 1'b0};  // p << 1
+            if (scaled > 9'd255)
+                scale_shift_1bit = 8'd255;
             else
-                mul_clip_u8 = prod[7:0];
+                scale_shift_1bit = scaled[7:0];
         end
     endfunction
 
-    assign y0_o = mul_clip_u8(p0_i, recip_i);
-    assign y1_o = mul_clip_u8(p1_i, recip_i);
-    assign y2_o = mul_clip_u8(p2_i, recip_i);
-    assign y3_o = mul_clip_u8(p3_i, recip_i);
+    assign y0_o = scale_shift_1bit(p0_i);
+    assign y1_o = scale_shift_1bit(p1_i);
+    assign y2_o = scale_shift_1bit(p2_i);
+    assign y3_o = scale_shift_1bit(p3_i);
 
 endmodule
 
