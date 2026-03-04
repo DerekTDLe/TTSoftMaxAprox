@@ -81,6 +81,8 @@ module tt_um_nonlut_softmax (
   wire ser_valid_w;
   wire ser_busy_w;
 
+  reg [7:0] dbg_mux;
+
   max4_signed8 u_max4 (
       .a_i(x0_reg),
       .b_i(x1_reg),
@@ -259,9 +261,6 @@ module tt_um_nonlut_softmax (
         end
 
         S9_OUT_WAIT: begin
-          if (ser_valid_w) begin
-            out_reg <= ser_data_w;
-          end
           if (ser_busy_w) begin
             ser_seen_busy <= 1'b1;
           end
@@ -279,10 +278,26 @@ module tt_um_nonlut_softmax (
     end
   end
 
-  assign uo_out = out_reg;
-  assign uio_out = {6'b0, ser_valid_w, done_reg};
+  assign uo_out = ser_valid_w ? ser_data_w : out_reg;
+  // Temporary debug export:
+  // uio_in[4:2] selects debug signal on uio_out[7:2]
+  // uio_out[1] = serializer valid, uio_out[0] = done
+  always @(*) begin
+    case (uio_in[4:2])
+      3'b000: dbg_mux = {state[3:0], 2'b00, load_idx};
+      3'b001: dbg_mux = max_val_w;
+      3'b010: dbg_mux = n0_w;
+      3'b011: dbg_mux = p0_reg;
+      3'b100: dbg_mux = sum_reg[7:0];
+      3'b101: dbg_mux = recip_reg[7:0];
+      3'b110: dbg_mux = recip_reg[15:8];
+      default: dbg_mux = y0_reg;
+    endcase
+  end
+
+  assign uio_out = {dbg_mux[7:2], ser_valid_w, done_reg};
   assign uio_oe  = 8'b00000011;
 
-  wire _unused = &{ena, uio_in, 1'b0};
+  wire _unused = &{ena, uio_in[7:5], 1'b0};
 
 endmodule
