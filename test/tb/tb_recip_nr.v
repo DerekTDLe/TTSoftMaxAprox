@@ -12,8 +12,8 @@ module tb_recip_nr;
   reg clk;
   reg rst_n;
   reg start;
-  reg [7:0] x_i;
-  wire [7:0] recip_o;
+  reg [9:0] x_i;
+  wire [15:0] recip_o;
   wire valid;
 
   recip_nr dut (

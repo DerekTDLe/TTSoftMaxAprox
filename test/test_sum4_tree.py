@@ -3,8 +3,8 @@ from cocotb.triggers import Timer
 
 
 @cocotb.test()
-async def test_sum4_tree_saturating_behavior(dut):
-    # Expected behavior for 8-bit output path: saturate at 255 (no wrap).
+async def test_sum4_tree_full_sum_behavior(dut):
+    # Expected behavior: preserve full 10-bit sum (0..1020).
     vectors = [
         (10, 20, 30, 40),
         (64, 64, 64, 64),
@@ -21,8 +21,6 @@ async def test_sum4_tree_saturating_behavior(dut):
 
         got = int(dut.sum_o.value)
         full_sum = a + b + c + d
-        expected = 255 if full_sum > 255 else full_sum
-
-        assert got == expected, (
-            f"Case {idx}: expected saturated sum {expected} (full={full_sum}), got {got}"
+        assert got == full_sum, (
+            f"Case {idx}: expected full sum {full_sum}, got {got}"
         )

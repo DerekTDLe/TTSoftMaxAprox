@@ -13,7 +13,7 @@ module tb_scale4_clip;
   reg  [7:0] p1_i;
   reg  [7:0] p2_i;
   reg  [7:0] p3_i;
-  reg  [7:0] recip_i;
+  reg  [15:0] recip_i;
 
   wire [7:0] y0_o;
   wire [7:0] y1_o;

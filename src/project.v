@@ -41,8 +41,8 @@ module tt_um_nonlut_softmax (
   reg [7:0] p2_reg;
   reg [7:0] p3_reg;
 
-  reg [7:0] sum_reg;
-  reg [7:0] recip_reg;
+  reg [9:0] sum_reg;
+  reg [15:0] recip_reg;
 
   reg [7:0] y0_reg;
   reg [7:0] y1_reg;
@@ -67,9 +67,9 @@ module tt_um_nonlut_softmax (
   wire [7:0] p2_w;
   wire [7:0] p3_w;
 
-  wire [7:0] sum_w;
+  wire [9:0] sum_w;
 
-  wire [7:0] recip_w;
+  wire [15:0] recip_w;
   wire recip_valid_w;
 
   wire [7:0] y0_w;
@@ -175,8 +175,8 @@ module tt_um_nonlut_softmax (
       p1_reg <= 8'd0;
       p2_reg <= 8'd0;
       p3_reg <= 8'd0;
-      sum_reg <= 8'd1;
-      recip_reg <= 8'd0;
+      sum_reg <= 10'd1;
+      recip_reg <= 16'd0;
       y0_reg <= 8'd0;
       y1_reg <= 8'd0;
       y2_reg <= 8'd0;
@@ -228,7 +228,7 @@ module tt_um_nonlut_softmax (
         end
 
         S4_SUM: begin
-          sum_reg <= (sum_w == 8'd0) ? 8'd1 : sum_w;
+          sum_reg <= (sum_w == 10'd0) ? 10'd1 : sum_w;
           state <= S5_RECIP_START;
         end
 

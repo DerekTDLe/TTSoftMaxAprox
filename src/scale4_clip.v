@@ -10,7 +10,7 @@ module scale4_clip( //scale 4 lanes by reciprocal and clip to 8-bit
     input  wire [7:0] p1_i,
     input  wire [7:0] p2_i,
     input  wire [7:0] p3_i,
-    input  wire [7:0] recip_i,
+    input  wire [15:0] recip_i,
     output wire [7:0] y0_o,
     output wire [7:0] y1_o,
     output wire [7:0] y2_o,
@@ -19,13 +19,16 @@ module scale4_clip( //scale 4 lanes by reciprocal and clip to 8-bit
 
     function automatic [7:0] mul_clip_u8;
         input [7:0] a;
-        input [7:0] b;
-        reg [15:0] prod;
+        input [15:0] b;
+        reg [23:0] prod;
         reg [15:0] scaled;
         begin
             prod = a * b;
             scaled = prod >> 8;
-            mul_clip_u8 = scaled[7:0];
+            if (scaled > 16'd255)
+                mul_clip_u8 = 8'd255;
+            else
+                mul_clip_u8 = scaled[7:0];
         end
     endfunction
 

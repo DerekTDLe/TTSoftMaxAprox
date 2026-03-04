@@ -13,7 +13,7 @@ module tb_sum4_tree;
   reg  [7:0] b_i;
   reg  [7:0] c_i;
   reg  [7:0] d_i;
-  wire [7:0] sum_o;
+  wire [9:0] sum_o;
 
   sum4_tree dut (
     .a_i(a_i),

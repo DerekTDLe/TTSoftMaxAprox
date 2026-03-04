@@ -5,8 +5,8 @@ from cocotb.triggers import RisingEdge, ClockCycles
 
 def golden_recip_q08(x: int) -> int:
     if x == 0:
-        return 255
-    return min(255, int(256 // x))
+        return 65535
+    return int((255 * 256) // x)
 
 
 async def run_case(dut, x: int):
@@ -43,7 +43,7 @@ async def test_recip_nr_directed(dut):
     dut.rst_n.value = 1
     await RisingEdge(dut.clk)
 
-    tests = [64, 16, 200, 1, 0]
+    tests = [64, 16, 200, 255, 1020, 0]
 
     for idx, x in enumerate(tests, start=1):
         expected = golden_recip_q08(x)

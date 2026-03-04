@@ -10,10 +10,10 @@ def q08_scale_expected(p: int, recip_q08: int) -> int:
 @cocotb.test()
 async def test_scale4_clip_q08_behavior(dut):
     vectors = [
-        ((64, 64, 64, 64), 64),   # expect ~16 each
-        ((255, 64, 32, 16), 64),  # expect scaled, not immediate clamp to 255
-        ((200, 50, 5, 1), 32),
-        ((0, 0, 0, 0), 128),
+        ((64, 64, 64, 64), 16 * 256),
+        ((255, 64, 32, 16), 1 * 256),
+        ((200, 50, 5, 1), 2 * 256),
+        ((0, 0, 0, 0), 255 * 256),
     ]
 
     for idx, (p, recip) in enumerate(vectors, start=1):
