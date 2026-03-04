@@ -3,8 +3,8 @@ from cocotb.triggers import Timer
 
 
 def q08_scale_expected(p: int, recip_q08: int) -> int:
-    # Softmax-intent scaling: p * (1/sum in Q0.8), then convert back to 8-bit
-    return (p * recip_q08) >> 8
+    scaled = (p * recip_q08) >> 8
+    return min(255, scaled)
 
 
 @cocotb.test()

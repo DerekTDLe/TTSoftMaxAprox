@@ -17,7 +17,7 @@ async def reset_dut(dut):
     await RisingEdge(dut.clk)
 
 
-async def run_softmax_transaction(dut, inputs, debug=False):
+async def run_softmax_transaction(dut, inputs):
     # Start pulse in IDLE
     dut.ui_in.value = 0x80
     await RisingEdge(dut.clk)
@@ -35,13 +35,6 @@ async def run_softmax_transaction(dut, inputs, debug=False):
         await RisingEdge(dut.clk)
         ser_valid = int(dut.uio_out.value) & 0x2
         done_flag = int(dut.uio_out.value) & 0x1
-
-        if debug:
-            dut._log.info(
-                f"dbg cyc={cyc:02d} state={int(dut.user_project.state.value)} "
-                f"ser_v={int(dut.user_project.ser_valid_w.value)} ser_d={int(dut.user_project.ser_data_w.value)} "
-                f"uo={int(dut.uo_out.value)} uio={int(dut.uio_out.value)}"
-            )
 
         if ser_valid:
             outputs.append(int(dut.uo_out.value))
@@ -86,7 +79,7 @@ async def test_project(dut):
         dut._log.info(f"Reset for case {idx}")
         await reset_dut(dut)
 
-        outputs, done_seen = await run_softmax_transaction(dut, vec, debug=(idx == 3))
+        outputs, done_seen = await run_softmax_transaction(dut, vec)
         ref = softmax_ref_u8(vec)
 
         assert len(outputs) == 4, f"Case {idx}: Expected 4 serialized outputs, got {len(outputs)}"
