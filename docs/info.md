@@ -125,7 +125,8 @@ make -B test-scale4-clip
 ## AI Usage
 Using Perplexity I generated some ideas for the tape-out and narrowed in on the SoftMax, and helped me plan out what modules I needed to make. After making the original modules, Copilot helped me generate tests for the individual modules, as well as helping test the top module once all submodules were tested. 
 
-After compiling, I found the gate count to be far too high, at about 9000 gates. I asked copilot to help me decrease the bitwidths of modules,replace multipliers for shift approximation, switch from the original Newton-Raphson calculation for a LUT in the recprical calculator, and decreasing the exponential linear approximation fidelity from 6 segments to 4 to decrease the gate count to ~1.3k. Afterwards, AI was used to edit test parameters to fit the new scope and modify config files. 
+After compiling, I found the gate count to be far too high, at about 9000 gates. I asked copilot to help me decrease the bitwidths of modules,replace multipliers for shift approximation, switch from the original Newton-Raphson calculation for a LUT in the recprical calculator, and decreasing the exponential linear approximation fidelity from 6 segments to 4 to decrease the gate count. Afterwards, AI was used to edit test parameters to fit the new scope and modify config files for a final gate count of ~1.5k gates.
+
 
 Finally, AI was used to confirm attributes of the project for the MD. 
 

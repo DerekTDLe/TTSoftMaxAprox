@@ -22,7 +22,9 @@ module scale4_clip( //Shift-based scaling using reciprocal
     // Decode upper bits to determine appropriate right-shift
     function automatic [7:0] scale_by_recip;
         input [7:0] p;
-        input [15:0] recip;
+        /* verilator lint_off UNUSEDSIGNAL */
+        input [15:0] recip; //need to disable lint here becuase I'm using only upper bits
+        /* verilator lint_on UNUSEDSIGNAL */
         begin
             // Check upper bits of recip to determine scaling
             if (recip[15:14] == 2'b11)           // recip >= 49152 (~255/256)

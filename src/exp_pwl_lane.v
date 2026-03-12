@@ -22,13 +22,13 @@ module exp_pwl_lane( //Minimal 4-segment shift-based PWL
             y_s = 16'sd255;
         end else if (x_s < -8'sd6) begin
             // [-8, -6): e^x ≈ 2*x + 16 = (x << 1) + 16
-            y_s = (x_s <<< 1) + 16'sd16;
+            y_s = (16'(x_s) <<< 1) + 16'sd16;
         end else if (x_s < -8'sd3) begin
             // [-6, -3): e^x ≈ 4*x + 32 = (x << 2) + 32
-            y_s = (x_s <<< 2) + 16'sd32;
+            y_s = (16'(x_s) <<< 2) + 16'sd32;
         end else begin
             // [-3, 0]: e^x ≈ 8*x + 64 = (x << 3) + 64 (x=0 gives 64)
-            y_s = (x_s <<< 3) + 16'sd64;
+            y_s = (16'(x_s) <<< 3) + 16'sd64;
         end
 
         // Saturate to [0, 255]

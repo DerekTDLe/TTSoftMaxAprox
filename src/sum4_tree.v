@@ -10,7 +10,7 @@ module sum4_tree( //Combinational adder tree (registered).
     output reg  [9:0] sum_o
 );
     always @(*) begin // WIP
-        sum_o = a_i + b_i + c_i + d_i;
+        sum_o = 10'(a_i) + 10'(b_i) + 10'(c_i) + 10'(d_i);
     end
     
 endmodule
